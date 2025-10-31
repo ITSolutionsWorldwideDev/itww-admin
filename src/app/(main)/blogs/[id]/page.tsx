@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import Image from "next/image";
 
 interface Blog {
   blog_id: number;
@@ -91,9 +92,11 @@ export default function BlogViewPage() {
         {error && <p className="mb-2 text-red-500">{error}</p>}
 
         {blog.imageurl && (
-          <img
+          <Image
             src={blog.imageurl}
             alt={blog.title}
+            width={400}
+            height={400}
             className="mb-4 w-full rounded-lg"
           />
         )}

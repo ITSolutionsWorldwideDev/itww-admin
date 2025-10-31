@@ -11,8 +11,6 @@ import MediaPickerModal from "@/components/Media/MediaPickerModal";
 
 export default function BlogFormPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const blogId = searchParams.get("id");
 
   const [showMediaModal, setShowMediaModal] = useState(false);
 
@@ -24,23 +22,6 @@ export default function BlogFormPage() {
   });
   const [loading, setLoading] = useState(false);
 
-  // Load blog if editing
-  useEffect(() => {
-    if (blogId) {
-      fetch(`/api/blogs?id=${blogId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data) {
-            setForm({
-              title: data.title || "",
-              content: data.content || "",
-              imageUrl: data.imageurl || "",
-              published: !!data.published,
-            });
-          }
-        });
-    }
-  }, [blogId]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -53,8 +34,11 @@ export default function BlogFormPage() {
     e.preventDefault();
     setLoading(true);
 
-    const method = blogId ? "PUT" : "POST";
-    const body = blogId ? { ...form, blog_id: blogId } : form;
+    // const method = blogId ? "PUT" : "POST";
+    // const body = blogId ? { ...form, blog_id: blogId } : form;
+
+    const method = "POST";
+    const body = form;
 
     const res = await fetch("/api/blogs", {
       method,
@@ -134,37 +118,6 @@ export default function BlogFormPage() {
                   </button>
                 )}
               </div>
-              {/* <div>
-          <label className="block text-sm font-medium mb-1">Title</label>
-          <input
-            name="title"
-            value={form.title}
-            onChange={handleChange}
-            required
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Image URL</label>
-          <input
-            name="imageUrl"
-            value={form.imageUrl}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1">Content</label>
-          <textarea
-            name="content"
-            value={form.content}
-            onChange={handleChange}
-            required
-            className="w-full border rounded px-3 py-2 min-h-[150px]"
-          />
-        </div> */}
 
               {/* Media Picker Modal */}
               {showMediaModal && (

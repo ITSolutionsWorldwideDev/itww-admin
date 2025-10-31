@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import Image from "next/image";
 
 interface JobInfo {
   job_info_id: number;
@@ -92,9 +93,11 @@ export default function JobInfoViewPage() {
         {error && <p className="mb-2 text-red-500">{error}</p>}
 
         {jobInfo.pdf_url && (
-          <img
+          <Image
             src={jobInfo.pdf_url}
             alt={jobInfo.title}
+            width={400}
+            height={400}
             className="mb-4 w-full rounded-lg"
           />
         )}

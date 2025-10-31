@@ -7,6 +7,7 @@ import { ShowcaseSection } from "@/components/Layouts/showcase-section";
 import InputGroup from "@/components/FormElements/InputGroup";
 import { TextAreaGroup } from "@/components/FormElements/InputGroup/text-area";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import MediaPickerModal from "@/components/Media/MediaPickerModal";
 
 interface JobInfoFormData {
   job_info_id: number;
@@ -24,6 +25,8 @@ export default function EditJobInfoPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  const [showMediaModal, setShowMediaModal] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -130,7 +133,7 @@ export default function EditJobInfoPage() {
                 value={form.type}
               />
 
-              <InputGroup
+              {/* <InputGroup
                 label="PDF URL"
                 placeholder="PDF URL"
                 type="text"
@@ -138,7 +141,50 @@ export default function EditJobInfoPage() {
                 active
                 handleChange={handleChange}
                 value={form.pdf_url || ""}
-              />
+              /> */}
+
+              {/* Featured Image */}
+              <div>
+                <label className="mb-2 block font-medium">Featured Image</label>
+                {form.pdf_url ? (
+                  <div className="relative w-40">
+                    <img
+                      src={form.pdf_url}
+                      alt="Featured"
+                      className="rounded border object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setForm({ ...form, pdf_url: "" })}
+                      className="absolute right-1 top-1 rounded bg-red-600 px-2 py-1 text-xs text-white"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setShowMediaModal(true)}
+                    className="rounded border border-dashed border-gray-400 px-4 py-2 hover:border-primary"
+                  >
+                    + Select Featured Image
+                  </button>
+                )}
+              </div>
+
+              {/* Media Picker Modal */}
+              {showMediaModal && (
+                <MediaPickerModal
+                  open={showMediaModal}
+                  multiple={false}
+                  onClose={() => setShowMediaModal(false)}
+                  onSelect={(files) => {
+                    if (files[0]) {
+                      setForm({ ...form, pdf_url: files[0].file_path });
+                    }
+                  }}
+                />
+              )}
 
               <label className="flex items-center gap-2">
                 <input

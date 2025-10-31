@@ -217,30 +217,3 @@ export default function EditBlogPage() {
     </>
   );
 }
-
-{
-  /* <input
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              placeholder="Blog Title"
-              className="w-full border p-2 rounded"
-            />
-            <textarea
-              name="content"
-              value={form.content}
-              onChange={handleChange}
-              placeholder="Blog Content"
-              rows={10}
-              className="w-full rounded border p-2"
-            />
-            <input
-              name="imageUrl"
-              value={form.imageUrl || ""}
-              onChange={handleChange}
-              placeholder="Image URL (optional)"
-              className="w-full rounded border p-2"
-            />
-
-             */
-}

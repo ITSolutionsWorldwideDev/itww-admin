@@ -4,38 +4,23 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import InputGroup from "@/components/FormElements/InputGroup";
 import { ShowcaseSection } from "@/components/Layouts/showcase-section";
+import MediaPickerModal from "@/components/Media/MediaPickerModal";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function JobInfoFormPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const job_info_id = searchParams.get("id"); // optional ?id=123 for editing
+  // const searchParams = useSearchParams();
+  // const job_info_id = searchParams.get("id"); // optional ?id=123 for editing
+  const [showMediaModal, setShowMediaModal] = useState(false);
 
   const [form, setForm] = useState({
     title: "",
     content: "",
-    imageUrl: "",
+    pdf_url: "",
     published: false,
   });
   const [loading, setLoading] = useState(false);
-
-  // useEffect(() => {
-  //   if (job_info_id) {
-  //     fetch(`/api/jobs-info?id=${job_info_id}`)
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         if (data) {
-  //           setForm({
-  //             title: data.title || "",
-  //             content: data.content || "",
-  //             imageUrl: data.imageurl || "",
-  //             published: !!data.published,
-  //           });
-  //         }
-  //       });
-  //   }
-  // }, [job_info_id]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -48,8 +33,11 @@ export default function JobInfoFormPage() {
     e.preventDefault();
     setLoading(true);
 
-    const method = job_info_id ? "PUT" : "POST";
-    const body = job_info_id ? { ...form, job_info_id: job_info_id } : form;
+    // const method = job_info_id ? "PUT" : "POST";
+    // const body = job_info_id ? { ...form, job_info_id: job_info_id } : form;
+
+    const method = "POST";
+    const body = form;
 
     const res = await fetch("/api/jobs-info", {
       method,
@@ -102,14 +90,58 @@ export default function JobInfoFormPage() {
                 handleChange={handleChange}
               />
 
-              <InputGroup
+              {/* <InputGroup
                 label="PDF URL"
                 placeholder="PDF URL"
                 type="text"
                 name="pdf_url"
                 active
                 handleChange={handleChange}
-              />
+              /> */}
+
+              {/* Featured Image Picker */}
+              <div>
+                <label className="mb-2 block font-medium">Featured Image</label>
+
+                {form.pdf_url ? (
+                  <div className="relative w-40">
+                    <img
+                      src={form.pdf_url}
+                      alt="Featured"
+                      className="rounded border object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setForm({ ...form, pdf_url: "" })}
+                      className="absolute right-1 top-1 rounded bg-red-600 px-2 py-1 text-xs text-white"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setShowMediaModal(true)}
+                    className="rounded border border-dashed border-gray-400 px-4 py-2 hover:border-primary"
+                  >
+                    + Select Featured Image
+                  </button>
+                )}
+              </div>
+
+              {/* Media Picker Modal */}
+              {showMediaModal && (
+                <MediaPickerModal
+                  open={showMediaModal}
+                  multiple={false}
+                  onClose={() => setShowMediaModal(false)}
+                  onSelect={(files) => {
+                    if (files[0]) {
+                      setForm({ ...form, pdf_url: files[0].file_path });
+                    }
+                  }}
+                />
+              )}
 
               <label className="flex items-center space-x-2">
                 <input
