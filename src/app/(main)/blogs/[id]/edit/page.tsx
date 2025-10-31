@@ -183,6 +183,7 @@ export default function EditBlogPage() {
                 <MediaPickerModal
                   open={showMediaModal}
                   multiple={false}
+                  module_ref="blogs"
                   onClose={() => setShowMediaModal(false)}
                   onSelect={(files) => {
                     if (files[0]) {

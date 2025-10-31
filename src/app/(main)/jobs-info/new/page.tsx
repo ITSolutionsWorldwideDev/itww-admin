@@ -134,6 +134,7 @@ export default function JobInfoFormPage() {
                 <MediaPickerModal
                   open={showMediaModal}
                   multiple={false}
+                  module_ref="jobs_desc"
                   onClose={() => setShowMediaModal(false)}
                   onSelect={(files) => {
                     if (files[0]) {

@@ -16,6 +16,7 @@ interface MediaItem {
 interface MediaPickerModalProps {
   open: boolean;
   multiple?: boolean;
+  module_ref?:string;
   onClose: () => void;
   onSelect: (selected: MediaItem[]) => void;
 }
@@ -23,6 +24,7 @@ interface MediaPickerModalProps {
 export default function MediaPickerModal({
   open,
   multiple = false,
+  module_ref="media",
   onClose,
   onSelect,
 }: MediaPickerModalProps) {
@@ -47,7 +49,8 @@ export default function MediaPickerModal({
     setUploading(true);
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("module_ref", "blogs");
+    // formData.append("module_ref", "blogs");
+    formData.append("module_ref", module_ref);
 
     const res = await fetch("/api/media", { method: "POST", body: formData });
     if (res.ok) await fetchMedia();

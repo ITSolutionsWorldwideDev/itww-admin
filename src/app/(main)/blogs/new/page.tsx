@@ -124,6 +124,7 @@ export default function BlogFormPage() {
                 <MediaPickerModal
                   open={showMediaModal}
                   multiple={false}
+                  module_ref="blogs"
                   onClose={() => setShowMediaModal(false)}
                   onSelect={(files) => {
                     if (files[0]) {
