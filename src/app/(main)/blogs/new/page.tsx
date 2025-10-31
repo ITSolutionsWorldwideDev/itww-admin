@@ -14,12 +14,7 @@ export default function BlogFormPage() {
   const searchParams = useSearchParams();
   const blogId = searchParams.get("id");
 
-  const [featuredImage, setFeaturedImage] = useState<string | null>(null);
-  const [contentImages, setContentImages] = useState<string[]>([]);
   const [showMediaModal, setShowMediaModal] = useState(false);
-  const [mediaType, setMediaType] = useState<"featured" | "content" | null>(
-    null,
-  );
 
   const [form, setForm] = useState({
     title: "",
@@ -75,19 +70,6 @@ export default function BlogFormPage() {
     setLoading(false);
   };
 
-  const openMediaPicker = (type: "featured" | "content") => {
-    setMediaType(type);
-    setShowMediaModal(true);
-  };
-
-  const handleSelectMedia = (files: any[]) => {
-    if (mediaType === "featured" && files[0]) {
-      setFeaturedImage(files[0].file_path);
-    } else if (mediaType === "content") {
-      setContentImages((prev) => [...prev, ...files.map((f) => f.file_path)]);
-    }
-  };
-
   return (
     <>
       <Breadcrumb pageName="Blogs" />
@@ -123,18 +105,20 @@ export default function BlogFormPage() {
                 handleChange={handleChange}
               />
 
-              {/* Featured Image */}
+              {/* Featured Image Picker */}
               <div>
                 <label className="mb-2 block font-medium">Featured Image</label>
-                {featuredImage ? (
+
+                {form.imageUrl ? (
                   <div className="relative w-40">
                     <img
-                      src={featuredImage}
+                      src={form.imageUrl}
                       alt="Featured"
                       className="rounded border object-cover"
                     />
                     <button
-                      onClick={() => setFeaturedImage(null)}
+                      type="button"
+                      onClick={() => setForm({ ...form, imageUrl: "" })}
                       className="absolute right-1 top-1 rounded bg-red-600 px-2 py-1 text-xs text-white"
                     >
                       Remove
@@ -143,7 +127,7 @@ export default function BlogFormPage() {
                 ) : (
                   <button
                     type="button"
-                    onClick={() => openMediaPicker("featured")}
+                    onClick={() => setShowMediaModal(true)}
                     className="rounded border border-dashed border-gray-400 px-4 py-2 hover:border-primary"
                   >
                     + Select Featured Image
@@ -182,13 +166,17 @@ export default function BlogFormPage() {
           />
         </div> */}
 
-              {/* Attach Modal */}
+              {/* Media Picker Modal */}
               {showMediaModal && (
                 <MediaPickerModal
                   open={showMediaModal}
-                  multiple={mediaType === "content"}
+                  multiple={false}
                   onClose={() => setShowMediaModal(false)}
-                  onSelect={handleSelectMedia}
+                  onSelect={(files) => {
+                    if (files[0]) {
+                      setForm({ ...form, imageUrl: files[0].file_path });
+                    }
+                  }}
                 />
               )}
 

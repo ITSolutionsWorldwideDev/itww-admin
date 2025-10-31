@@ -25,25 +25,27 @@ export default function EditBlogPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  const [featuredImage, setFeaturedImage] = useState<string | null>(null);
-  const [contentImages, setContentImages] = useState<string[]>([]);
   const [showMediaModal, setShowMediaModal] = useState(false);
-  const [mediaType, setMediaType] = useState<"featured" | "content" | null>(
-    null
-  );
 
-  const openMediaPicker = (type: "featured" | "content") => {
-    setMediaType(type);
-    setShowMediaModal(true);
-  };
+  // const [featuredImage, setFeaturedImage] = useState<string | null>(null);
+  // const [contentImages, setContentImages] = useState<string[]>([]);
+  // const [showMediaModal, setShowMediaModal] = useState(false);
+  // const [mediaType, setMediaType] = useState<"featured" | "content" | null>(
+  //   null
+  // );
 
-  const handleSelectMedia = (files: any[]) => {
-    if (mediaType === "featured" && files[0]) {
-      setFeaturedImage(files[0].file_path);
-    } else if (mediaType === "content") {
-      setContentImages((prev) => [...prev, ...files.map((f) => f.file_path)]);
-    }
-  };
+  // const openMediaPicker = (type: "featured" | "content") => {
+  //   setMediaType(type);
+  //   setShowMediaModal(true);
+  // };
+
+  // const handleSelectMedia = (files: any[]) => {
+  //   if (mediaType === "featured" && files[0]) {
+  //     setFeaturedImage(files[0].file_path);
+  //   } else if (mediaType === "content") {
+  //     setContentImages((prev) => [...prev, ...files.map((f) => f.file_path)]);
+  //   }
+  // };
 
   useEffect(() => {
     if (!id) return;
@@ -137,7 +139,7 @@ export default function EditBlogPage() {
                 handleChange={handleChange}
               />
 
-              <InputGroup
+              {/* <InputGroup
                 label="Image URL"
                 placeholder="Image URL"
                 type="text"
@@ -145,45 +147,50 @@ export default function EditBlogPage() {
                 active
                 handleChange={handleChange}
                 value={form.imageUrl || ""}
-              />
+              /> */}
 
               {/* Featured Image */}
-      <div>
-        <label className="mb-2 block font-medium">Featured Image</label>
-        {featuredImage ? (
-          <div className="relative w-40">
-            <img
-              src={featuredImage}
-              alt="Featured"
-              className="rounded border object-cover"
-            />
-            <button
-              onClick={() => setFeaturedImage(null)}
-              className="absolute right-1 top-1 rounded bg-red-600 px-2 py-1 text-xs text-white"
-            >
-              Remove
-            </button>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={() => openMediaPicker("featured")}
-            className="rounded border border-dashed border-gray-400 px-4 py-2 hover:border-primary"
-          >
-            + Select Featured Image
-          </button>
-        )}
-      </div>
+              <div>
+                <label className="mb-2 block font-medium">Featured Image</label>
+                {form.imageUrl ? (
+                  <div className="relative w-40">
+                    <img
+                      src={form.imageUrl}
+                      alt="Featured"
+                      className="rounded border object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setForm({ ...form, imageUrl: "" })}
+                      className="absolute right-1 top-1 rounded bg-red-600 px-2 py-1 text-xs text-white"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setShowMediaModal(true)}
+                    className="rounded border border-dashed border-gray-400 px-4 py-2 hover:border-primary"
+                  >
+                    + Select Featured Image
+                  </button>
+                )}
+              </div>
 
-      {/* Attach Modal */}
-      {showMediaModal && (
-        <MediaPickerModal
-          open={showMediaModal}
-          multiple={mediaType === "content"}
-          onClose={() => setShowMediaModal(false)}
-          onSelect={handleSelectMedia}
-        />
-      )}
+              {/* Media Picker Modal */}
+              {showMediaModal && (
+                <MediaPickerModal
+                  open={showMediaModal}
+                  multiple={false}
+                  onClose={() => setShowMediaModal(false)}
+                  onSelect={(files) => {
+                    if (files[0]) {
+                      setForm({ ...form, imageUrl: files[0].file_path });
+                    }
+                  }}
+                />
+              )}
 
               <label className="flex items-center gap-2">
                 <input
