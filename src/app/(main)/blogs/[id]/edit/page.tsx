@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ShowcaseSection } from "@/components/Layouts/showcase-section";
 import InputGroup from "@/components/FormElements/InputGroup";
-import { TextAreaGroup } from "@/components/FormElements/InputGroup/text-area";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import MediaPickerModal from "@/components/Media/MediaPickerModal";
+import TipTapEditor from "@/components/FormElements/InputGroup/text-area-editor";
 
 interface BlogFormData {
   blog_id: number;
@@ -26,26 +26,6 @@ export default function EditBlogPage() {
   const [error, setError] = useState("");
 
   const [showMediaModal, setShowMediaModal] = useState(false);
-
-  // const [featuredImage, setFeaturedImage] = useState<string | null>(null);
-  // const [contentImages, setContentImages] = useState<string[]>([]);
-  // const [showMediaModal, setShowMediaModal] = useState(false);
-  // const [mediaType, setMediaType] = useState<"featured" | "content" | null>(
-  //   null
-  // );
-
-  // const openMediaPicker = (type: "featured" | "content") => {
-  //   setMediaType(type);
-  //   setShowMediaModal(true);
-  // };
-
-  // const handleSelectMedia = (files: any[]) => {
-  //   if (mediaType === "featured" && files[0]) {
-  //     setFeaturedImage(files[0].file_path);
-  //   } else if (mediaType === "content") {
-  //     setContentImages((prev) => [...prev, ...files.map((f) => f.file_path)]);
-  //   }
-  // };
 
   useEffect(() => {
     if (!id) return;
@@ -75,6 +55,11 @@ export default function EditBlogPage() {
   ) => {
     if (!form) return;
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleEditorChange = (name: string, value: string) => {
+    if (!form) return;
+    setForm({ ...form, [name]: value });
   };
 
   const handleToggle = () => {
@@ -129,7 +114,7 @@ export default function EditBlogPage() {
                 value={form.title}
               />
 
-              <TextAreaGroup
+              {/* <TextAreaGroup
                 label="Blog Content"
                 placeholder="Blog Content"
                 active
@@ -137,8 +122,16 @@ export default function EditBlogPage() {
                 name="content"
                 defaultValue={form.content}
                 handleChange={handleChange}
+              /> */}
+              <TipTapEditor
+                label="Blog Content"
+                placeholder="Write your blog content here..."
+                required
+                name="content"
+                value={form.content}
+                // onChange={(name, html) => setForm({ ...form, [name]: html })}
+                 onChange={handleEditorChange}
               />
-
               {/* <InputGroup
                 label="Image URL"
                 placeholder="Image URL"
@@ -148,7 +141,6 @@ export default function EditBlogPage() {
                 handleChange={handleChange}
                 value={form.imageUrl || ""}
               /> */}
-
               {/* Featured Image */}
               <div>
                 <label className="mb-2 block font-medium">Featured Image</label>
@@ -177,7 +169,6 @@ export default function EditBlogPage() {
                   </button>
                 )}
               </div>
-
               {/* Media Picker Modal */}
               {showMediaModal && (
                 <MediaPickerModal
@@ -192,7 +183,6 @@ export default function EditBlogPage() {
                   }}
                 />
               )}
-
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -201,9 +191,7 @@ export default function EditBlogPage() {
                 />
                 <span>Published</span>
               </label>
-
               {error && <p className="text-red-500">{error}</p>}
-
               <button
                 type="submit"
                 disabled={saving}
@@ -218,3 +206,23 @@ export default function EditBlogPage() {
     </>
   );
 }
+
+// const [featuredImage, setFeaturedImage] = useState<string | null>(null);
+// const [contentImages, setContentImages] = useState<string[]>([]);
+// const [showMediaModal, setShowMediaModal] = useState(false);
+// const [mediaType, setMediaType] = useState<"featured" | "content" | null>(
+//   null
+// );
+
+// const openMediaPicker = (type: "featured" | "content") => {
+//   setMediaType(type);
+//   setShowMediaModal(true);
+// };
+
+// const handleSelectMedia = (files: any[]) => {
+//   if (mediaType === "featured" && files[0]) {
+//     setFeaturedImage(files[0].file_path);
+//   } else if (mediaType === "content") {
+//     setContentImages((prev) => [...prev, ...files.map((f) => f.file_path)]);
+//   }
+// };

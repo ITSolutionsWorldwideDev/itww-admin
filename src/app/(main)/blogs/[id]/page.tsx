@@ -6,6 +6,9 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Image from "next/image";
+import { ShowcaseSection } from "@/components/Layouts/showcase-section";
+import InputGroup from "@/components/FormElements/InputGroup";
+import { TextAreaGroup } from "@/components/FormElements/InputGroup/text-area";
 
 interface Blog {
   blog_id: number;
@@ -67,44 +70,84 @@ export default function BlogViewPage() {
   if (loading) return <p>Loading blog...</p>;
   if (!blog) return <p>Blog not found.</p>;
 
+  function handleEditorChange(name: string, value: string): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <>
-      <Breadcrumb pageName="Blogs" />
+      <Breadcrumb pageName="Blog View" />
       <div className="mx-auto max-w-full p-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h1 className="text-3xl font-bold">{blog.title}</h1>
-          <div className="flex gap-2">
-            <Link
-              href={`/blogs/${blog.blog_id}/edit`}
-              className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
-            >
-              Edit
-            </Link>
-            <button
-              onClick={() => setShowModal(true)}
-              className="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700"
-            >
-              Delete
-            </button>
+        <div className="grid grid-cols-1 gap-9">
+          <div className="flex flex-col gap-9">
+            <ShowcaseSection title="" className="space-y-5.5 !p-6.5">
+              {error && <p className="mb-2 text-red-500">{error}</p>}
+              <div className="mb-4 flex items-center justify-between">
+                <div className="flex gap-2">
+                  <Link
+                    href={`/blogs/${blog.blog_id}/edit`}
+                    className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => setShowModal(true)}
+                    className="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+
+              <form className="space-y-4">
+                <InputGroup
+                  label="Title"
+                  placeholder="Blog Title"
+                  type="text"
+                  name="title"
+                  disabled
+                  value={blog.title}
+                />
+
+                <InputGroup
+                  label="Date Created"
+                  placeholder="Date Created"
+                  type="text"
+                  name="title"
+                  disabled
+                  value={new Date(blog.created_at).toLocaleDateString()}
+                />
+                <div>
+                  <label className="mb-2 block font-medium">
+                    Featured Image
+                  </label>
+                  {blog.imageurl && (
+                    <Image
+                      src={blog.imageurl}
+                      alt={blog.title}
+                      width={400}
+                      height={400}
+                      className="w-{400} h-{400} mb-4 rounded-lg"
+                    />
+                  )}
+                </div>
+                {/* <TextAreaGroup
+                  label="Blog Content"
+                  placeholder="Blog Content"
+                  active
+                  required
+                  name="content"
+                  defaultValue={blog.content}
+                /> */}
+                <label className="mb-2 block font-medium">Content</label>
+                <div
+                  className="prose max-w-none"
+                  dangerouslySetInnerHTML={{ __html: blog.content }}
+                />
+              </form>
+            </ShowcaseSection>
           </div>
         </div>
-
-        {error && <p className="mb-2 text-red-500">{error}</p>}
-
-        {blog.imageurl && (
-          <Image
-            src={blog.imageurl}
-            alt={blog.title}
-            width={400}
-            height={400}
-            className="mb-4 w-full rounded-lg"
-          />
-        )}
-        <p className="mb-2 text-sm text-gray-500">
-          By {blog.author_username || blog.author_email || "Unknown"} •{" "}
-          {new Date(blog.created_at).toLocaleDateString()}
-        </p>
-        <div className="prose max-w-none text-gray-800">{blog.content}</div>
 
         {/* Confirmation Modal */}
         {showModal && (

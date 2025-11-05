@@ -8,6 +8,7 @@ import InputGroup from "@/components/FormElements/InputGroup";
 import { TextAreaGroup } from "@/components/FormElements/InputGroup/text-area";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import MediaPickerModal from "@/components/Media/MediaPickerModal";
+import TipTapEditor from "@/components/FormElements/InputGroup/text-area-editor";
 
 export default function BlogFormPage() {
   const router = useRouter();
@@ -22,12 +23,16 @@ export default function BlogFormPage() {
   });
   const [loading, setLoading] = useState(false);
 
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value, type, checked } = e.target as HTMLInputElement;
     setForm({ ...form, [name]: type === "checkbox" ? checked : value });
+  };
+
+  const handleEditorChange = (name: string, value: string) => {
+    if (!form) return;
+    setForm({ ...form, [name]: value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -70,15 +75,24 @@ export default function BlogFormPage() {
                 required
                 handleChange={handleChange}
               />
+              <TipTapEditor
+                label="Blog Content"
+                placeholder="Write your blog content here..."
+                required
+                name="content"
+                value={form.content}
+                // onChange={(name, html) => setForm({ ...form, [name]: html })}
+                onChange={handleEditorChange}
+              />
 
-              <TextAreaGroup
+              {/* <TextAreaGroup
                 label="Blog Content"
                 placeholder="Blog Content"
                 active
                 required
                 name="content"
                 handleChange={handleChange}
-              />
+              /> */}
 
               <InputGroup
                 label="Image URL"

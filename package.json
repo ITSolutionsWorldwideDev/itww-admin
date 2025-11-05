@@ -9,8 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@lexkit/editor": "^0.0.37",
     "@prisma/client": "^6.18.0",
     "@prisma/extension-accelerate": "^2.0.2",
+    "@tiptap/extension-bubble-menu": "^3.10.2",
+    "@tiptap/extension-image": "^3.10.2",
+    "@tiptap/extension-link": "^3.10.1",
+    "@tiptap/extension-placeholder": "^3.10.2",
+    "@tiptap/extension-text-align": "^3.10.2",
+    "@tiptap/extension-underline": "^3.10.1",
+    "@tiptap/react": "^3.10.2",
+    "@tiptap/starter-kit": "^3.10.2",
     "apexcharts": "^4.5.0",
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
@@ -28,6 +37,7 @@
     "react-apexcharts": "^1.7.0",
     "react-dom": "19.0.0",
     "tailwind-merge": "^2.6.0",
+    "tiptap-extension-resize-image": "^1.3.2",
     "zustand": "^5.0.8"
   },
   "devDependencies": {

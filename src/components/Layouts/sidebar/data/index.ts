@@ -16,6 +16,12 @@ export const NAV_DATA = [
         items: [],
       },
       {
+        title: "Applications",
+        url: "/job-applications",
+        icon: Icons.Alphabet,
+        items: [],
+      },
+      {
         title: "Blogs",
         url: "/blogs",
         icon: Icons.Alphabet,
@@ -25,7 +31,12 @@ export const NAV_DATA = [
         title: "Media",
         url: "/media",
         icon: Icons.Alphabet,
-        items: [],
+        items: [
+          {
+            title: "",
+            url: "#",
+          },
+        ],
       },
       /*
       {
@@ -34,20 +45,20 @@ export const NAV_DATA = [
         icon: Icons.User,
         items: [],
       }, */
-      {
-        title: "Forms",
-        icon: Icons.Alphabet,
-        items: [
-          {
-            title: "Form Elements",
-            url: "/forms/form-elements",
-          },
-          {
-            title: "Form Layout",
-            url: "/forms/form-layout",
-          },
-        ],
-      },
+      // {
+      //   title: "Forms",
+      //   icon: Icons.Alphabet,
+      //   items: [
+      //     {
+      //       title: "Form Elements",
+      //       url: "/forms/form-elements",
+      //     },
+      //     {
+      //       title: "Form Layout",
+      //       url: "/forms/form-layout",
+      //     },
+      //   ],
+      // },
       // {
       //   title: "Tables",
       //   url: "/tables",
