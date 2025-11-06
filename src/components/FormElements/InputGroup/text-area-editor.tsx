@@ -22,7 +22,7 @@ import Placeholder from "@tiptap/extension-placeholder";
 // optional community plugin for resizing
 import ResizeImage from "tiptap-extension-resize-image";
 
-export default function TipTapEditor({
+/* export default function TipTapEditor({
   value,
   onChange,
 }: {
@@ -31,25 +31,25 @@ export default function TipTapEditor({
 }) {
   const [showMediaModal, setShowMediaModal] = useState(false);
 
-  /* const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Placeholder.configure({ placeholder: "Write your blog..." }),
-      TextAlign.configure({
-        types: ["heading", "paragraph", "image"],
-      }),
-      Image.configure({
-        inline: false,
-        allowBase64: true,
-      }),
-      ResizeImage, // enable image resizing (optional)
-    ],
-    content: value || "",
-    immediatelyRender: false,
-    onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
-    },
-  }); */
+  // const editor = useEditor({
+  //   extensions: [
+  //     StarterKit,
+  //     Placeholder.configure({ placeholder: "Write your blog..." }),
+  //     TextAlign.configure({
+  //       types: ["heading", "paragraph", "image"],
+  //     }),
+  //     Image.configure({
+  //       inline: false,
+  //       allowBase64: true,
+  //     }),
+  //     ResizeImage, // enable image resizing (optional)
+  //   ],
+  //   content: value || "",
+  //   immediatelyRender: false,
+  //   onUpdate: ({ editor }) => {
+  //     onChange(editor.getHTML());
+  //   },
+  // });
 
   const editor = useEditor({
     extensions: [
@@ -90,7 +90,7 @@ export default function TipTapEditor({
 
   return (
     <div className="rounded-lg border p-3">
-      {/* Toolbar */}
+
       <div className="mb-2 flex flex-wrap gap-2 border-b pb-2">
         <button
           type="button"
@@ -143,7 +143,7 @@ export default function TipTapEditor({
           ➡️
         </button>
 
-        {/* Image Upload */}
+
         <button
           type="button"
           onClick={() => setShowMediaModal(true)}
@@ -153,35 +153,12 @@ export default function TipTapEditor({
         </button>
       </div>
 
-      {/* Bubble menu for inline controls */}
-      {/* <BubbleMenu
-        editor={editor}
-        tippyOptions={{ duration: 100 }}
-        className="flex gap-2 rounded border bg-white p-2 shadow-md"
-      >
-        <button
-          onClick={() => editor.chain().focus().setTextAlign("left").run()}
-        >
-          Left
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setTextAlign("center").run()}
-        >
-          Center
-        </button>
-        <button
-          onClick={() => editor.chain().focus().setTextAlign("right").run()}
-        >
-          Right
-        </button>
-      </BubbleMenu> */}
-
       <EditorContent
         editor={editor}
         className="prose min-h-[200px] max-w-none"
       />
 
-      {/* Media Modal */}
+
       {showMediaModal && (
         <MediaPickerModal
           open={showMediaModal}
@@ -197,8 +174,8 @@ export default function TipTapEditor({
     </div>
   );
 }
-
-/* interface TipTapEditorProps {
+ */
+interface TipTapEditorProps {
   label: string;
   name: string;
   value: string;
@@ -362,4 +339,4 @@ export default function TipTapEditor({
       )}
     </div>
   );
-} */
+}

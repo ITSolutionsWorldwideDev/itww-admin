@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { LogOutIcon, SettingsIcon, UserIcon } from "./icons";
+import { LogOutIcon, SettingsIcon, UserAvatar, UserIcon } from "./icons";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 
@@ -41,7 +41,7 @@ export function UserInfo() {
         <figure className="flex items-center gap-3">
           <Image
             // src={USER.img}
-            src="/images/user/user-03.png"
+            src="/images/user/avatar.png"
             className="size-12"
             alt={`Avatar of ${user?.username}`}
             role="presentation"
@@ -73,7 +73,7 @@ export function UserInfo() {
         <figure className="flex items-center gap-2.5 px-5 py-3.5">
           <Image
             // src={USER.img}
-            src="/images/user/user-03.png"
+            src="/images/user/avatar.png"
             className="size-12"
             alt={`Avatar for ${user?.username}`}
             role="presentation"
@@ -99,7 +99,7 @@ export function UserInfo() {
             onClick={() => setIsOpen(false)}
             className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-[9px] hover:bg-gray-2 hover:text-dark dark:hover:bg-dark-3 dark:hover:text-white"
           >
-            <UserIcon />
+            <UserAvatar />
 
             <span className="mr-auto text-base font-medium">View profile</span>
           </Link>

@@ -45,4 +45,9 @@ export const metadata: Metadata = {
   },
   description:
     "IT Solutions Worldwide - Admin Panel",
+  icons: {
+    icon: "/images/favicon.svg", // or /favicon.png, /icon.svg
+    shortcut: "/images/favicon.svg",
+    apple: "/images/apple-touch-icon.png",
+  },
 };

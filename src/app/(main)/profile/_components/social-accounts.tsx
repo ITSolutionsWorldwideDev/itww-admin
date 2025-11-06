@@ -10,27 +10,27 @@ import {
 const ACCOUNTS = [
   {
     platform: "Facebook",
-    url: "#",
+    url: "https://www.facebook.com/itsolutionsww/",
     Icon: FacebookIcon,
   },
   {
     platform: "X",
-    url: "#",
+    url: "https://x.com/ITSolutionsBV",
     Icon: XIcon,
   },
   {
     platform: "LinkedIn",
-    url: "#",
+    url: "https://nl.linkedin.com/company/it-solutions-worldwide-bv",
     Icon: LinkedInIcon,
   },
-  {
-    platform: "Dribble",
-    url: "#",
-    Icon: DribbleIcon,
-  },
+  // {
+  //   platform: "Instagram",
+  //   url: "https://www.instagram.com/itsolutionsworldwide/",
+  //   Icon: GitHubIcon,
+  // },
   {
     platform: "GitHub",
-    url: "#",
+    url: "https://github.com/ITSolutionsWorldwideDev",
     Icon: GitHubIcon,
   },
 ];
@@ -39,7 +39,7 @@ export function SocialAccounts() {
   return (
     <div className="mt-4.5">
       <h4 className="mb-3.5 font-medium text-dark dark:text-white">
-        Follow me on
+        Follow us on
       </h4>
       <div className="flex items-center justify-center gap-3.5">
         {ACCOUNTS.map(({ Icon, ...item }) => (
