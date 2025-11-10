@@ -10,22 +10,20 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useEffect } from "react";
 
-
 export default function Signin() {
-
   const router = useRouter();
   const { setUser } = useAuthStore();
 
   const { isAuthenticated } = useAuthStore();
 
-  console.log('isAuthenticated === ', isAuthenticated);
+  console.log("setUser === ", setUser);
+  console.log("isAuthenticated === ", isAuthenticated);
 
   useEffect(() => {
-  if (isAuthenticated) {
-    router.replace("/");
-  }
-}, [isAuthenticated, router]);
-
+    if (isAuthenticated) {
+      router.replace("/");
+    }
+  }, [isAuthenticated, router]);
 
   const [data, setData] = useState({
     email: process.env.NEXT_PUBLIC_DEMO_USER_MAIL || "",
@@ -57,11 +55,12 @@ export default function Signin() {
           email: data.email,
           password: data.password,
         }),
+        credentials: "include",
       });
 
       const result = await res.json();
 
-      console.log('result === ', result);
+      console.log("result === ", result);
 
       if (!res.ok) {
         setError(result.error || "Invalid credentials");
@@ -82,8 +81,7 @@ export default function Signin() {
 
   return (
     <form onSubmit={handleSubmit}>
-
-      <div className="max-xl:hidden text-center">
+      <div className="text-center max-xl:hidden">
         <h1 className="mb-0.5 text-heading-5 font-bold text-dark dark:text-white">
           Admin Dashboard
         </h1>
@@ -114,7 +112,7 @@ export default function Signin() {
 
       {/* Error message */}
       {error && (
-        <div className="mb-4 text-sm text-center text-red-500">{error}</div>
+        <div className="mb-4 text-center text-sm text-red-500">{error}</div>
       )}
 
       {/* Submit button */}

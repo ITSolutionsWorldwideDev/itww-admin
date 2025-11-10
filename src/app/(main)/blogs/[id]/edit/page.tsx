@@ -7,7 +7,8 @@ import { ShowcaseSection } from "@/components/Layouts/showcase-section";
 import InputGroup from "@/components/FormElements/InputGroup";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import MediaPickerModal from "@/components/Media/MediaPickerModal";
-import TipTapEditor from "@/components/FormElements/InputGroup/text-area-editor";
+// import TipTapEditor from "@/components/FormElements/InputGroup/text-area-editor";
+import ClientSideCustomEditor from "@/components/FormElements/InputGroup/client-side-custom-editor";
 
 interface BlogFormData {
   blog_id: number;
@@ -113,34 +114,24 @@ export default function EditBlogPage() {
                 handleChange={handleChange}
                 value={form.title}
               />
-
-              {/* <TextAreaGroup
-                label="Blog Content"
-                placeholder="Blog Content"
-                active
-                required
-                name="content"
-                defaultValue={form.content}
-                handleChange={handleChange}
-              /> */}
-              <TipTapEditor
+              {/* <TipTapEditor
                 label="Blog Content"
                 placeholder="Write your blog content here..."
                 required
                 name="content"
                 value={form.content}
                 // onChange={(name, html) => setForm({ ...form, [name]: html })}
-                 onChange={handleEditorChange}
-              />
-              {/* <InputGroup
-                label="Image URL"
-                placeholder="Image URL"
-                type="text"
-                name="imageUrl"
-                active
-                handleChange={handleChange}
-                value={form.imageUrl || ""}
+                onChange={handleEditorChange}
               /> */}
+
+              <ClientSideCustomEditor
+                name="content"
+                value={form.content}
+                placeholder="Write your blog content here..."
+                onChange={handleEditorChange}
+                onOpenMediaModal={() => setShowMediaModal(true)}
+              />
+
               {/* Featured Image */}
               <div>
                 <label className="mb-2 block font-medium">Featured Image</label>
@@ -178,8 +169,22 @@ export default function EditBlogPage() {
                   onClose={() => setShowMediaModal(false)}
                   onSelect={(files) => {
                     if (files[0]) {
-                      setForm({ ...form, imageUrl: files[0].file_path });
+                      const imageUrl = files[0].file_path;
+
+                      // Insert image directly into CKEditor content
+                      const temp = document.querySelector(
+                        ".ck-editor__editable",
+                      );
+                      if (temp && form) {
+                        const newHtml = `${form.content || ""}<p><img src="${imageUrl}" alt="" /></p>`;
+                        setForm({ ...form, content: newHtml });
+                      }
+
+                      setShowMediaModal(false);
                     }
+                    // if (files[0]) {
+                    //   setForm({ ...form, imageUrl: files[0].file_path });
+                    // }
                   }}
                 />
               )}
@@ -206,23 +211,3 @@ export default function EditBlogPage() {
     </>
   );
 }
-
-// const [featuredImage, setFeaturedImage] = useState<string | null>(null);
-// const [contentImages, setContentImages] = useState<string[]>([]);
-// const [showMediaModal, setShowMediaModal] = useState(false);
-// const [mediaType, setMediaType] = useState<"featured" | "content" | null>(
-//   null
-// );
-
-// const openMediaPicker = (type: "featured" | "content") => {
-//   setMediaType(type);
-//   setShowMediaModal(true);
-// };
-
-// const handleSelectMedia = (files: any[]) => {
-//   if (mediaType === "featured" && files[0]) {
-//     setFeaturedImage(files[0].file_path);
-//   } else if (mediaType === "content") {
-//     setContentImages((prev) => [...prev, ...files.map((f) => f.file_path)]);
-//   }
-// };

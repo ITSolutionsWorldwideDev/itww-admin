@@ -17,7 +17,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  const token =
+  /* const token =
     req.cookies.get("token")?.value ||
     req.headers.get("authorization")?.replace("Bearer ", "");
 
@@ -26,7 +26,7 @@ export async function middleware(req: NextRequest) {
   console.log('token == ', token);
   console.log('isAuthRoute == ', isAuthRoute);
 
-  /* // ✅ If no token, only allow auth routes
+  // ✅ If no token, only allow auth routes
   if (!token) {
     if (!isAuthRoute) {
       return NextResponse.redirect(new URL("/auth/sign-in", req.url));
@@ -35,7 +35,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // ✅ If token exists, verify it
-  const valid = verifyJWT(token);
+  const valid = await verifyJWT(token);
   console.log('valid == ', valid);
   if (!valid) {
     // invalid or expired token → redirect to sign-in

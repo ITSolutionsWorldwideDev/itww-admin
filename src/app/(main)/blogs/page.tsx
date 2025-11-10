@@ -36,7 +36,7 @@ interface ApiResponse {
   totalPages: number;
 }
 
-const PAGE_SIZE = 24;
+const PAGE_SIZE = 10;
 
 export default function BlogListPage() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
