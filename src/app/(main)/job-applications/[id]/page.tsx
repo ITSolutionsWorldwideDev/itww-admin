@@ -1,31 +1,36 @@
-// src/app/jobs-info/[id]/page.tsx
+// src/app/(main)/job-applications/[id]/page.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Image from "next/image";
 import { ShowcaseSection } from "@/components/Layouts/showcase-section";
 import InputGroup from "@/components/FormElements/InputGroup";
 
-interface JobInfo {
-  job_info_id: number;
-  title: string;
-  location: string;
-  type: string;
-  pdf_url?: string;
-  author_username?: string;
-  author_email?: string;
+interface JobApplication {
+  job_applications_id: number;
+  name: string;
+  email: string;
+  phone: string;
+  hear: string;
+  address: string;
+  message: string;
+  job_category_id: string;
+  job_category: string;
+  resume_data: string;
+  resume_mime: string;
+  resume_filename: string;
   created_at: string;
-  updated_at: string;
-  published: number;
 }
 
-export default function JobInfoViewPage() {
+export default function JobApplicationViewPage() {
   const { id } = useParams();
   const router = useRouter();
-  const [jobInfo, setJobInfo] = useState<JobInfo | null>(null);
+  const [JobApplication, setJobApplication] = useState<JobApplication | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
@@ -33,18 +38,18 @@ export default function JobInfoViewPage() {
 
   useEffect(() => {
     if (!id) return;
-    const fetchJobInfo = async () => {
+    const fetchJobApplication = async () => {
       try {
-        const res = await fetch(`/api/jobs-info?id=${id}`);
+        const res = await fetch(`/api/jobs-application?id=${id}`);
         const data = await res.json();
-        setJobInfo(data);
+        setJobApplication(data);
       } catch (err) {
-        console.error("Failed to load JobInfo", err);
+        console.error("Failed to load JobApplication", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchJobInfo();
+    fetchJobApplication();
   }, [id]);
 
   const handleDelete = async () => {
@@ -53,12 +58,15 @@ export default function JobInfoViewPage() {
     setError("");
 
     try {
-      const res = await fetch(`/api/jobs-info?id=${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/jobs-application?id=${id}`, {
+        method: "DELETE",
+      });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to delete JobInfo");
+      if (!res.ok)
+        throw new Error(data.error || "Failed to delete JobApplication");
 
       setShowModal(false);
-      router.push("/jobs-info");
+      router.push("/job-applications");
     } catch (err: any) {
       console.error(err);
       setError(err.message);
@@ -67,37 +75,74 @@ export default function JobInfoViewPage() {
     }
   };
 
-  if (loading) return <p>Loading JobInfo...</p>;
-  if (!jobInfo) return <p>JobInfo not found.</p>;
+  if (loading) return <p>Loading JobApplication...</p>;
+  if (!JobApplication) return <p>JobApplication not found.</p>;
 
   return (
     <>
-      <Breadcrumb pageName="Job Info" />
+      <Breadcrumb pageName="Job Application" />
+
       <div className="mx-auto max-w-full p-6">
         <div className="grid grid-cols-1 gap-9">
           <div className="flex flex-col gap-9">
             <ShowcaseSection
-              title={jobInfo.title}
+              title={JobApplication.job_category}
               className="space-y-5.5 !p-6.5"
             >
               {error && <p className="mb-2 text-red-500">{error}</p>}
 
+              <a
+                href={`/api/jobs-application/${JobApplication.job_applications_id}/resume`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline dark:text-blue-400"
+              >
+                View Resume
+              </a>
+
               <InputGroup
-                label="Job Type"
-                placeholder="Job Type"
+                label="Applicant Name"
+                placeholder="Applicant Name"
                 type="text"
-                name="type"
+                name="title"
                 disabled
-                value={jobInfo.type}
+                value={JobApplication.name}
               />
 
               <InputGroup
-                label="Job Location"
-                placeholder="Job Location"
+                label="Email"
+                placeholder="Email"
                 type="text"
-                name="location"
+                name="email"
                 disabled
-                value={jobInfo.location}
+                value={JobApplication.email}
+              />
+
+              <InputGroup
+                label="Phone No."
+                placeholder="Phone No."
+                type="text"
+                name="phone"
+                disabled
+                value={JobApplication.phone}
+              />
+
+              <InputGroup
+                label="Hear From"
+                placeholder="Hear From"
+                type="text"
+                name="hear"
+                disabled
+                value={JobApplication.hear}
+              />
+
+              <InputGroup
+                label="Address"
+                placeholder="Address"
+                type="text"
+                name="address"
+                disabled
+                value={JobApplication.address}
               />
 
               <InputGroup
@@ -106,38 +151,21 @@ export default function JobInfoViewPage() {
                 type="text"
                 name="title"
                 disabled
-                value={new Date(jobInfo.created_at).toLocaleDateString()}
+                value={new Date(JobApplication.created_at).toLocaleDateString()}
               />
 
               <div className="mb-4 text-right">
-                <div className="flex gap-2">
-                  <Link
-                    href={`/jobs-info/${jobInfo.job_info_id}/edit`}
-                    className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    onClick={() => setShowModal(true)}
-                    className="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700"
-                  >
-                    Delete
-                  </button>
-                </div>
+                <button
+                  onClick={() => setShowModal(true)}
+                  className="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700"
+                >
+                  Delete
+                </button>
               </div>
-
-              {jobInfo.pdf_url?.length && (
-                <Image
-                  src={jobInfo.pdf_url}
-                  alt={jobInfo.title}
-                  width={400}
-                  height={400}
-                  className="mb-4 w-full rounded-lg"
-                />
-              )}
             </ShowcaseSection>
           </div>
         </div>
+
         {/* Confirmation Modal */}
         {showModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
@@ -147,8 +175,8 @@ export default function JobInfoViewPage() {
               </h2>
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                 Are you sure you want to delete{" "}
-                <span className="font-semibold">“{jobInfo.title}”</span>? This
-                action cannot be undone.
+                <span className="font-semibold">“{JobApplication.name}”</span>
+                Application? This action cannot be undone.
               </p>
 
               <div className="mt-6 flex justify-end gap-3">

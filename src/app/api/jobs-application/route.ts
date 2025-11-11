@@ -50,9 +50,8 @@ export async function GET(req: NextRequest) {
   //   SELECT job_applications_id, name, email, phone, address, hear, message, created_at, updated_at, published_at, created_by_id, updated_by_id, job_category_id
 	// FROM public.job_applications;
 
-    const query = `SELECT i.*,info.title AS job_type 
+    const query = `SELECT i.* 
         FROM job_applications AS i
-        LEFT JOIN jobs_infos AS info ON info.job_info_id = i.job_category_id
         ${whereClause}
         ${sortingOrder}
         LIMIT ${pageSize} OFFSET ${offset}

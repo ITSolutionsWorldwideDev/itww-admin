@@ -15,11 +15,11 @@ import { UserInfo } from "./user-info";
 
 export function Header() {
   const { toggleSidebar, isMobile } = useSidebarContext();
-  const { isAuthenticated } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();
+  const { isAuthenticated, hasHydrated } = useAuthStore();
 
-  useEffect(() => {
+  /* useEffect(() => {
     // ✅ Skip protection for auth pages
     if (pathname.startsWith("/auth")) return;
 
@@ -27,7 +27,21 @@ export function Header() {
     if (!isAuthenticated) {
       router.replace("/auth/sign-in");
     }
-  }, [isAuthenticated, pathname, router]);
+  }, [isAuthenticated, pathname, router]); */
+
+  useEffect(() => {
+    if (!hasHydrated) return; // 👈 wait for Zustand to load from localStorage
+    if (pathname.startsWith("/auth")) return;
+
+    if (!isAuthenticated) {
+      router.replace("/auth/sign-in");
+    }
+  }, [hasHydrated, isAuthenticated, pathname, router]);
+
+  if (!hasHydrated) {
+    // optionally show a loader or nothing until hydration is done
+    return null;
+  }
 
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between border-b border-stroke bg-white px-4 py-5 shadow-1 dark:border-stroke-dark dark:bg-gray-dark md:px-5 2xl:px-10">

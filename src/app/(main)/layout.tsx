@@ -1,4 +1,4 @@
-// src/app/(home)/layout.tsx
+// src/app/(main)/layout.tsx
 import "@/css/satoshi.css";
 import "@/css/style.css";
 

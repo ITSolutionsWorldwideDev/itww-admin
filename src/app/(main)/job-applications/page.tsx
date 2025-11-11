@@ -16,6 +16,7 @@ import {
 import { cn } from "@/lib/utils";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 
+
 interface JobApplication {
   job_applications_id: number;
   name: string;
@@ -23,11 +24,15 @@ interface JobApplication {
   phone: string;
   hear: string;
   address: string;
-  job_type: string;
+  message: string;
+  job_category_id: string;
+  job_category: string;
+  resume_data: string;
+  resume_mime: string;
+  resume_filename: string;
   created_at: string;
 }
 
-// SELECT job_applications_id, name, email, phone, address, hear, message, created_at, updated_at, published_at, created_by_id, updated_by_id, job_category_id
 
 interface ApiResponse {
   items: JobApplication[];
@@ -37,24 +42,24 @@ interface ApiResponse {
   totalPages: number;
 }
 
-const PAGE_SIZE = 10;
+// const PAGE_SIZE = 10;
 
 export default function JobApplicationsListPage() {
   const [JobApplications, setJobApplications] = useState<JobApplication[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selected_job_applications, set_selected_job_applications] = useState<JobApplication | null>(
-    null,
-  );
+  const [selected_job_applications, set_selected_job_applications] =
+    useState<JobApplication | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   // ✅ Fetch jobsApplication
-  const fetchjobsApplication = async (page = 1) => {
+  const fetchjobsApplication = async (page = 1, limit = pageSize) => {
     setLoading(true);
     try {
       const res = await fetch(
-        `/api/jobs-application?page=${page}&limit=${PAGE_SIZE}`,
+        `/api/jobs-application?page=${page}&limit=${limit}`,
         {
           cache: "no-store",
         },
@@ -74,14 +79,18 @@ export default function JobApplicationsListPage() {
     fetchjobsApplication(currentPage);
   }, [currentPage]);
 
-
   const handleDelete = async (id: number) => {
     setDeleting(true);
     try {
-      const res = await fetch(`/api/jobs-application?id=${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/jobs-application?id=${id}`, {
+        method: "DELETE",
+      });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to delete JobApplication");
-      setJobApplications((prev) => prev.filter((b) => b.job_applications_id !== id));
+      if (!res.ok)
+        throw new Error(data.error || "Failed to delete JobApplication");
+      setJobApplications((prev) =>
+        prev.filter((b) => b.job_applications_id !== id),
+      );
       set_selected_job_applications(null);
     } catch (err) {
       console.error(err);
@@ -96,7 +105,6 @@ export default function JobApplicationsListPage() {
     <>
       <Breadcrumb pageName="Job Application" />
       <div className="rounded-[10px] border border-stroke bg-white p-4 shadow-sm dark:border-dark-3 dark:bg-gray-dark sm:p-7.5">
-
         {/* Table */}
         <Table>
           <TableHeader>
@@ -107,6 +115,7 @@ export default function JobApplicationsListPage() {
               <TableHead>Phone</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Hear From</TableHead>
+              <TableHead>Resume</TableHead>
               <TableHead className="text-right xl:pr-7.5">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -121,7 +130,7 @@ export default function JobApplicationsListPage() {
                   {/* Title */}
                   <TableCell className="min-w-[200px] xl:pl-7.5">
                     <Link
-                      href={`/jobs-application/${JobApplication.job_applications_id}`}
+                      href={`/job-applications/${JobApplication.job_applications_id}`}
                       className="font-medium text-dark hover:underline dark:text-white"
                     >
                       {JobApplication.name}
@@ -131,7 +140,7 @@ export default function JobApplicationsListPage() {
                   {/* Job Type */}
                   <TableCell>
                     <p className="text-dark dark:text-white">
-                      {JobApplication.job_type}
+                      {JobApplication.job_category}
                     </p>
                   </TableCell>
 
@@ -163,11 +172,25 @@ export default function JobApplicationsListPage() {
                     </p>
                   </TableCell>
 
+                  {/* View Resume */}
+                  <TableCell>
+                    <a
+                      href={`/api/jobs-application/${JobApplication.job_applications_id}/resume`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline dark:text-blue-400"
+                    >
+                      View Resume
+                    </a>
+                  </TableCell>
+
                   {/* Actions */}
                   <TableCell className="xl:pr-7.5">
                     <div className="flex items-center justify-end gap-x-3.5">
                       <button
-                        onClick={() => set_selected_job_applications(JobApplication)}
+                        onClick={() =>
+                          set_selected_job_applications(JobApplication)
+                        }
                         className="hover:text-red-600"
                         title="Delete JobApplication"
                       >
@@ -189,9 +212,30 @@ export default function JobApplicationsListPage() {
 
         {/* Pagination */}
         <div className="mt-6 flex flex-col items-center justify-between gap-4 border-t pt-4 text-sm sm:flex-row">
-          <p className="text-gray-600 dark:text-gray-400">
+          {/* <p className="text-gray-600 dark:text-gray-400">
             Page {currentPage} of {totalPages}
-          </p>
+          </p> */}
+
+          <div className="flex items-center gap-2">
+            <span>Show</span>
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                const newSize = Number(e.target.value);
+                setPageSize(newSize);
+                setCurrentPage(1);
+                fetchjobsApplication(1, newSize);
+              }}
+              className="rounded border border-gray-300 px-2 py-1 dark:border-gray-700 dark:bg-dark-3"
+            >
+              {[10, 20, 50].map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
+            <span>items per page</span>
+          </div>
 
           <div className="flex items-center gap-2">
             {/* Previous Button */}
@@ -273,7 +317,9 @@ export default function JobApplicationsListPage() {
                   Cancel
                 </button>
                 <button
-                  onClick={() => handleDelete(selected_job_applications.job_applications_id)}
+                  onClick={() =>
+                    handleDelete(selected_job_applications.job_applications_id)
+                  }
                   disabled={deleting}
                   className="rounded bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700 disabled:opacity-50"
                 >
