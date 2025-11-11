@@ -164,14 +164,14 @@ export async function PUT(req: NextRequest) {
 // -------------------------
 export async function DELETE(req: NextRequest) {
   try {
-    const token =
-      req.cookies.get("token")?.value ||
-      req.headers.get("authorization")?.replace("Bearer ", "");
-    const user = verifyJWT(token || "") as AuthTokenPayload | null;
+    // const token =
+    //   req.cookies.get("token")?.value ||
+    //   req.headers.get("authorization")?.replace("Bearer ", "");
+    // const user = verifyJWT(token || "") as AuthTokenPayload | null;
 
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    // if (!user) {
+    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // }
 
     const { searchParams } = new URL(req.url);
     const job_info_id = searchParams.get("id");
@@ -190,13 +190,13 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "jobs-info not found" }, { status: 404 });
     }
 
-    const jobsInfo = check.rows[0];
-    if (jobsInfo.author_id !== user.user_id) {
-      return NextResponse.json(
-        { error: "You are not authorized to delete this jobs-info" },
-        { status: 403 }
-      );
-    }
+    // const jobsInfo = check.rows[0];
+    // if (jobsInfo.author_id !== user.user_id) {
+    //   return NextResponse.json(
+    //     { error: "You are not authorized to delete this jobs-info" },
+    //     { status: 403 }
+    //   );
+    // }
 
     await pool.query(`DELETE FROM jobs_infos WHERE job_info_id = $1`, [job_info_id]);
 

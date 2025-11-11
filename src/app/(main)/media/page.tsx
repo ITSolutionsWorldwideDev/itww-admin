@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useAuthStore } from "@/store/useAuthStore"; 
 
 interface MediaItem {
   media_id: number;
@@ -17,26 +18,41 @@ export default function MediaLibrary() {
   const [uploading, setUploading] = useState(false);
   const [selected, setSelected] = useState<MediaItem | null>(null);
 
+  const { token } = useAuthStore();
+
   const fetchMedia = async () => {
-    const res = await fetch("/api/media");
+    if (!token) return;
+
+    const res = await fetch("/api/media", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const data = await res.json();
     setMedia(data);
   };
 
   useEffect(() => {
     fetchMedia();
-  }, []);
+  }, [token]);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || !token) return;
 
     setUploading(true);
     const formData = new FormData();
     formData.append("file", file);
     formData.append("module_ref", "blogs");
 
-    const res = await fetch("/api/media", { method: "POST", body: formData });
+    const res = await fetch("/api/media", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
     if (res.ok) {
       await fetchMedia();
     }
@@ -45,7 +61,14 @@ export default function MediaLibrary() {
 
   const handleDelete = async (id: number) => {
     if (!confirm("Delete this image?")) return;
-    await fetch(`/api/media?id=${id}`, { method: "DELETE" });
+    if (!token) return;
+
+    await fetch(`/api/media?id=${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`, // ✅ attach token
+      },
+    });
     await fetchMedia();
   };
 

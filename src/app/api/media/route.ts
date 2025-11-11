@@ -92,6 +92,7 @@ export async function DELETE(req: NextRequest) {
     const token =
       req.cookies.get("token")?.value ||
       req.headers.get("authorization")?.replace("Bearer ", "");
+
     const user = verifyJWT(token || "") as AuthTokenPayload | null;
 
     if (!user) {

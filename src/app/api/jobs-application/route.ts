@@ -87,14 +87,14 @@ export async function GET(req: NextRequest) {
 // -------------------------
 export async function DELETE(req: NextRequest) {
   try {
-    const token =
-      req.cookies.get("token")?.value ||
-      req.headers.get("authorization")?.replace("Bearer ", "");
-    const user = verifyJWT(token || "") as AuthTokenPayload | null;
+    // const token =
+    //   req.cookies.get("token")?.value ||
+    //   req.headers.get("authorization")?.replace("Bearer ", "");
+    // const user = verifyJWT(token || "") as AuthTokenPayload | null;
 
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    // if (!user) {
+    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // }
 
     const { searchParams } = new URL(req.url);
     const job_applications_id = searchParams.get("id");
