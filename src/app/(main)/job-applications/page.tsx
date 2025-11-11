@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface JobApplication {
   job_applications_id: number;
@@ -32,7 +32,6 @@ interface JobApplication {
   resume_filename: string;
   created_at: string;
 }
-
 
 interface ApiResponse {
   items: JobApplication[];
@@ -54,14 +53,20 @@ export default function JobApplicationsListPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
+  const { token } = useAuthStore();
+
   // ✅ Fetch jobsApplication
   const fetchjobsApplication = async (page = 1, limit = pageSize) => {
     setLoading(true);
     try {
       const res = await fetch(
         `/api/jobs-application?page=${page}&limit=${limit}`,
+
         {
           cache: "no-store",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
       );
       const data: ApiResponse = await res.json();
@@ -84,6 +89,9 @@ export default function JobApplicationsListPage() {
     try {
       const res = await fetch(`/api/jobs-application?id=${id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       const data = await res.json();
       if (!res.ok)

@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface Blog {
   blog_id: number;
@@ -46,11 +47,16 @@ export default function BlogListPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  const { token } = useAuthStore();
+
   // ✅ Fetch blogs
   const fetchBlogs = async (page = 1) => {
     setLoading(true);
     try {
       const res = await fetch(`/api/blogs?page=${page}&limit=${PAGE_SIZE}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         cache: "no-store",
       });
       const data: ApiResponse = await res.json();
@@ -73,7 +79,12 @@ export default function BlogListPage() {
   const handleDelete = async (id: number) => {
     setDeleting(true);
     try {
-      const res = await fetch(`/api/blogs?id=${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/blogs?id=${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        method: "DELETE",
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to delete blog");
       setBlogs((prev) => prev.filter((b) => b.blog_id !== id));

@@ -7,12 +7,15 @@ import { ShowcaseSection } from "@/components/Layouts/showcase-section";
 import MediaPickerModal from "@/components/Media/MediaPickerModal";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function JobInfoFormPage() {
   const router = useRouter();
   // const searchParams = useSearchParams();
   // const job_info_id = searchParams.get("id"); // optional ?id=123 for editing
   const [showMediaModal, setShowMediaModal] = useState(false);
+
+  const { token } = useAuthStore();
 
   const [form, setForm] = useState({
     title: "",
@@ -38,10 +41,14 @@ export default function JobInfoFormPage() {
 
     const method = "POST";
     const body = form;
+    if (!token) return;
 
     const res = await fetch("/api/jobs-info", {
       method,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(body),
     });
 

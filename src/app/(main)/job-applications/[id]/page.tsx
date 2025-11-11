@@ -8,6 +8,7 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Image from "next/image";
 import { ShowcaseSection } from "@/components/Layouts/showcase-section";
 import InputGroup from "@/components/FormElements/InputGroup";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface JobApplication {
   job_applications_id: number;
@@ -36,6 +37,8 @@ export default function JobApplicationViewPage() {
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
 
+  const { token } = useAuthStore();
+
   useEffect(() => {
     if (!id) return;
     const fetchJobApplication = async () => {
@@ -60,6 +63,9 @@ export default function JobApplicationViewPage() {
     try {
       const res = await fetch(`/api/jobs-application?id=${id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       const data = await res.json();
       if (!res.ok)

@@ -9,6 +9,7 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import MediaPickerModal from "@/components/Media/MediaPickerModal";
 // import TipTapEditor from "@/components/FormElements/InputGroup/text-area-editor";
 import ClientSideCustomEditor from "@/components/FormElements/InputGroup/client-side-custom-editor";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface BlogFormData {
   blog_id: number;
@@ -26,13 +27,19 @@ export default function EditBlogPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
+  const { token } = useAuthStore();
+
   const [showMediaModal, setShowMediaModal] = useState(false);
 
   useEffect(() => {
     if (!id) return;
     const fetchBlog = async () => {
       try {
-        const res = await fetch(`/api/blogs?id=${id}`);
+        const res = await fetch(`/api/blogs?id=${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Failed to load blog");
         setForm({
@@ -78,7 +85,10 @@ export default function EditBlogPage() {
     try {
       const res = await fetch("/api/blogs", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(form),
       });
 

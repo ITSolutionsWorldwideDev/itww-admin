@@ -9,11 +9,14 @@ import { TextAreaGroup } from "@/components/FormElements/InputGroup/text-area";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import MediaPickerModal from "@/components/Media/MediaPickerModal";
 import TipTapEditor from "@/components/FormElements/InputGroup/text-area-editor";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function BlogFormPage() {
   const router = useRouter();
 
   const [showMediaModal, setShowMediaModal] = useState(false);
+
+  const { token } = useAuthStore();
 
   const [form, setForm] = useState({
     title: "",
@@ -47,7 +50,10 @@ export default function BlogFormPage() {
 
     const res = await fetch("/api/blogs", {
       method,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(body),
     });
 

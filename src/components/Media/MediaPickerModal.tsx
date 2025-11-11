@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useAuthStore } from "@/store/useAuthStore"; 
 
 interface MediaItem {
   media_id: number;
@@ -32,19 +33,27 @@ export default function MediaPickerModal({
   const [selected, setSelected] = useState<MediaItem[]>([]);
   const [uploading, setUploading] = useState(false);
 
+  const { token } = useAuthStore();
+
   const fetchMedia = async () => {
-    const res = await fetch("/api/media");
+    if (!token) return;
+
+    const res = await fetch("/api/media", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const data = await res.json();
     setMedia(data);
   };
 
   useEffect(() => {
     if (open) fetchMedia();
-  }, [open]);
+  }, [token,open]);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || !token) return;
 
     setUploading(true);
     const formData = new FormData();
@@ -52,8 +61,17 @@ export default function MediaPickerModal({
     // formData.append("module_ref", "blogs");
     formData.append("module_ref", module_ref);
 
-    const res = await fetch("/api/media", { method: "POST", body: formData });
-    if (res.ok) await fetchMedia();
+    const res = await fetch("/api/media", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    if (res.ok) {
+      await fetchMedia();
+    }
     setUploading(false);
   };
 

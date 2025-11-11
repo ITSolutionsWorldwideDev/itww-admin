@@ -8,6 +8,7 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Image from "next/image";
 import { ShowcaseSection } from "@/components/Layouts/showcase-section";
 import InputGroup from "@/components/FormElements/InputGroup";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface JobInfo {
   job_info_id: number;
@@ -31,11 +32,18 @@ export default function JobInfoViewPage() {
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
 
+  const { token } = useAuthStore();
+
   useEffect(() => {
     if (!id) return;
     const fetchJobInfo = async () => {
       try {
-        const res = await fetch(`/api/jobs-info?id=${id}`);
+        if (!token) return;
+        const res = await fetch(`/api/jobs-info?id=${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await res.json();
         setJobInfo(data);
       } catch (err) {
@@ -53,7 +61,13 @@ export default function JobInfoViewPage() {
     setError("");
 
     try {
-      const res = await fetch(`/api/jobs-info?id=${id}`, { method: "DELETE" });
+      if (!token) return;
+      const res = await fetch(`/api/jobs-info?id=${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        method: "DELETE",
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to delete JobInfo");
 

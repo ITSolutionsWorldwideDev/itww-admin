@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface JobInfo {
   job_info_id: number;
@@ -48,13 +49,20 @@ export default function JobInfoListPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  const { token } = useAuthStore();
+
   // ✅ Fetch jobsInfo
   const fetchjobsInfo = async (page = 1) => {
     setLoading(true);
     try {
+      if (!token) return;
+
       const res = await fetch(
         `/api/jobs-info?page=${page}&limit=${PAGE_SIZE}`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           cache: "no-store",
         },
       );
@@ -78,7 +86,14 @@ export default function JobInfoListPage() {
   const handleDelete = async (id: number) => {
     setDeleting(true);
     try {
-      const res = await fetch(`/api/jobs-info?id=${id}`, { method: "DELETE" });
+      if (!token) return;
+      const res = await fetch(`/api/jobs-info?id=${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to delete JobInfo");
       setJobInfos((prev) => prev.filter((b) => b.job_info_id !== id));

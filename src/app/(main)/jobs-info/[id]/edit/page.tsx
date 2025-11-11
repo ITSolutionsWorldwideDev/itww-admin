@@ -8,6 +8,7 @@ import InputGroup from "@/components/FormElements/InputGroup";
 import { TextAreaGroup } from "@/components/FormElements/InputGroup/text-area";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import MediaPickerModal from "@/components/Media/MediaPickerModal";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface JobInfoFormData {
   job_info_id: number;
@@ -28,11 +29,18 @@ export default function EditJobInfoPage() {
 
   const [showMediaModal, setShowMediaModal] = useState(false);
 
+  const { token } = useAuthStore();
+
   useEffect(() => {
     if (!id) return;
+    if (!token) return;
     const fetchJobInfo = async () => {
       try {
-        const res = await fetch(`/api/jobs-info?id=${id}`);
+        const res = await fetch(`/api/jobs-info?id=${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Failed to load JobInfo");
         setForm({
@@ -74,7 +82,7 @@ export default function EditJobInfoPage() {
     try {
       const res = await fetch("/api/jobs-info", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { Authorization: `Bearer ${token}`,"Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
 

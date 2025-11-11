@@ -99,10 +99,10 @@ export async function POST(req: NextRequest) {
     }
 
     const { title, location, type, pdf_url, published } = await req.json();
-    const slug = title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)+/g, "");
+    // const slug = title
+    //   .toLowerCase()
+    //   .replace(/[^a-z0-9]+/g, "-")
+    //   .replace(/(^-|-$)+/g, "");
 
     const result = await pool.query(
       `INSERT INTO jobs_infos (title, location, type, pdf_url, created_at, updated_at, published, created_by)

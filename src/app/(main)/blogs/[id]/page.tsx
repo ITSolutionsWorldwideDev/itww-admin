@@ -9,6 +9,7 @@ import Image from "next/image";
 import { ShowcaseSection } from "@/components/Layouts/showcase-section";
 import InputGroup from "@/components/FormElements/InputGroup";
 import { TextAreaGroup } from "@/components/FormElements/InputGroup/text-area";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface Blog {
   blog_id: number;
@@ -30,12 +31,17 @@ export default function BlogViewPage() {
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const { token } = useAuthStore();
 
   useEffect(() => {
     if (!id) return;
     const fetchBlog = async () => {
       try {
-        const res = await fetch(`/api/blogs?id=${id}`);
+        const res = await fetch(`/api/blogs?id=${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await res.json();
         setBlog(data);
       } catch (err) {
@@ -53,7 +59,12 @@ export default function BlogViewPage() {
     setError("");
 
     try {
-      const res = await fetch(`/api/blogs?id=${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/blogs?id=${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        method: "DELETE",
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to delete blog");
 
