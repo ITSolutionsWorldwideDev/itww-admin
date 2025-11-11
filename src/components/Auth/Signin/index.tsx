@@ -13,11 +13,7 @@ import { useEffect } from "react";
 export default function Signin() {
   const router = useRouter();
   const { setUser } = useAuthStore();
-
   const { isAuthenticated } = useAuthStore();
-
-  console.log("setUser === ", setUser);
-  console.log("isAuthenticated === ", isAuthenticated);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -59,8 +55,6 @@ export default function Signin() {
       });
 
       const result = await res.json();
-
-      console.log("result === ", result);
 
       if (!res.ok) {
         setError(result.error || "Invalid credentials");

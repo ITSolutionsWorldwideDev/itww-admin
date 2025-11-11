@@ -2,8 +2,9 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: any) {
   const { id } = params;
+
   try {
     const query = `
       SELECT resume_filename, resume_mime, resume_data
@@ -25,6 +26,9 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     });
   } catch (error) {
     console.error("Error fetching resume:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }

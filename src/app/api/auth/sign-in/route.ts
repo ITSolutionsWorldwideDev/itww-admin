@@ -2,7 +2,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { createJWT } from "@/lib/auth";
-// import { cookies } from "next/headers";
 import pool from "@/lib/db";
 
 export async function POST(req: Request) {
@@ -33,18 +32,6 @@ export async function POST(req: Request) {
 
     const token = await createJWT(user);
 
-    // ✅ Set cookie using App Router API
-    /* (await cookies()).set({
-      name: "token",
-      value: token,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false,
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
-    }); */
-
-    // ✅ Create a response and set the cookie directly on it
     const response = NextResponse.json({
       message: "Login successful",
       user: {
@@ -57,16 +44,6 @@ export async function POST(req: Request) {
       token,
     });
 
-    /* response.cookies.set({
-      name: "token",
-      value: token,
-      httpOnly: true,
-      path: "/",
-      secure: process.env.NODE_ENV === "production" ? true : false,
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    }); */
-
     return response;
   } catch (err) {
     console.error(err);
@@ -77,22 +54,13 @@ export async function POST(req: Request) {
   }
 }
 
-// (await cookies()).set({
-//   name: "token",
-//   value: token,
-//   httpOnly: true,
-//   path: "/",
-//   secure: process.env.NODE_ENV === "production",
-// });
-
-// return NextResponse.json({
-//   message: "Login successful",
-//   token,
-//   user: {
-//     id: user.user_id,
-//     username: user.username,
-//     email: user.email,
-//     firstName: user.firstName,
-//     lastName: user.lastName,
-//   },
-// });
+// ✅ Set cookie using App Router API
+/* (await cookies()).set({
+      name: "token",
+      value: token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    }); */
