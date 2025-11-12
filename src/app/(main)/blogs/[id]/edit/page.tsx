@@ -10,6 +10,7 @@ import MediaPickerModal from "@/components/Media/MediaPickerModal";
 // import TipTapEditor from "@/components/FormElements/InputGroup/text-area-editor";
 import ClientSideCustomEditor from "@/components/FormElements/InputGroup/client-side-custom-editor";
 import { useAuthStore } from "@/store/useAuthStore";
+import TipTapEditor from "@/components/FormElements/InputGroup/text-area-editor";
 
 interface BlogFormData {
   blog_id: number;
@@ -134,12 +135,21 @@ export default function EditBlogPage() {
                 onChange={handleEditorChange}
               /> */}
 
-              <ClientSideCustomEditor
+              {/* <ClientSideCustomEditor
                 name="content"
                 value={form.content}
                 placeholder="Write your blog content here..."
                 onChange={handleEditorChange}
                 onOpenMediaModal={() => setShowMediaModal(true)}
+              /> */}
+
+              <TipTapEditor
+                label="Blog Content"
+                placeholder="Write your blog content here..."
+                required
+                name="content"
+                value={form.content}
+                onChange={handleEditorChange}
               />
 
               {/* Featured Image */}

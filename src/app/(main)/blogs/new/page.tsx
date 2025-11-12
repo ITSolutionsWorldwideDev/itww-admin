@@ -100,14 +100,14 @@ export default function BlogFormPage() {
                 handleChange={handleChange}
               /> */}
 
-              <InputGroup
+              {/* <InputGroup
                 label="Image URL"
                 placeholder="Image URL"
                 type="text"
                 name="imageUrl"
                 active
                 handleChange={handleChange}
-              />
+              /> */}
 
               {/* Featured Image Picker */}
               <div>
