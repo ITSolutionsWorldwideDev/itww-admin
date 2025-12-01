@@ -99,6 +99,8 @@ export async function POST(req: NextRequest) {
     }
 
     const { title, content, imageUrl, published } = await req.json();
+
+
     const slug = title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
@@ -111,9 +113,24 @@ export async function POST(req: NextRequest) {
       [title, slug, content, imageUrl || null, published ? 1 : 0, user.user_id],
     );
 
+    console.log('result ==== ',result);
+
     return NextResponse.json(result.rows[0], { status: 201 });
-  } catch (err) {
+  } catch (err:any) {
     console.error(err);
+
+    if (err.code === "23505") {
+    return NextResponse.json(
+      {
+        error: "A blog with this slug already exists. Try changing the title.",
+        field: "slug",  // optional: frontend can highlight field
+        detail: err.detail,
+      },
+      { status: 409 } // 409 Conflict
+    );
+  }
+
+
     return NextResponse.json(
       { error: "Failed to create blog" },
       { status: 500 },
