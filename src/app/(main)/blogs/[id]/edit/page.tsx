@@ -182,7 +182,7 @@ export default function EditBlogPage() {
                   </button>
                 )}
               </div>
-              {/* Media Picker Modal */}
+
               {showMediaModal && (
                 <MediaPickerModal
                   open={showMediaModal}
@@ -191,12 +191,36 @@ export default function EditBlogPage() {
                   onClose={() => setShowMediaModal(false)}
                   onSelect={(files) => {
                     if (files[0]) {
+                      setForm({ ...form, imageUrl: files[0].file_path });
+                    }
+                  }}
+                />
+              )}
+
+
+              {/* Media Picker Modal */}
+              {/* {showMediaModal && (
+                <MediaPickerModal
+                  open={showMediaModal}
+                  multiple={false}
+                  module_ref="blogs"
+                  onClose={() => setShowMediaModal(false)}
+                  onSelect={(files) => {
+
+                    console.log('files === ',files);
+                    if (files[0]) {
                       const imageUrl = files[0].file_path;
+
+                      console.log('imageUrl === ',imageUrl);
 
                       // Insert image directly into CKEditor content
                       const temp = document.querySelector(
                         ".ck-editor__editable",
                       );
+
+                      console.log('temp === ',temp);
+                      console.log('form === ',form);
+
                       if (temp && form) {
                         const newHtml = `${form.content || ""}<p><img src="${imageUrl}" alt="" /></p>`;
                         setForm({ ...form, content: newHtml });
@@ -209,7 +233,7 @@ export default function EditBlogPage() {
                     // }
                   }}
                 />
-              )}
+              )} */}
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
