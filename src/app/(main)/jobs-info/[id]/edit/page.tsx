@@ -58,7 +58,7 @@ export default function EditJobInfoPage() {
       }
     };
     fetchJobInfo();
-  }, [token,id]);
+  }, [token, id]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -82,7 +82,10 @@ export default function EditJobInfoPage() {
     try {
       const res = await fetch("/api/jobs-info", {
         method: "PUT",
-        headers: { Authorization: `Bearer ${token}`,"Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(form),
       });
 
@@ -157,7 +160,7 @@ export default function EditJobInfoPage() {
                       alt="Featured"
                       className="rounded border object-cover"
                     /> */}
-                    
+
               <div>
                 <label className="mb-2 block font-medium">Featured Image</label>
                 {form.pdf_url ? (
@@ -190,15 +193,17 @@ export default function EditJobInfoPage() {
               {/* Media Picker Modal */}
               {showMediaModal && (
                 <MediaPickerModal
-                  open={showMediaModal}
-                  multiple={false}
-                  module_ref="jobs_desc"
-                  onClose={() => setShowMediaModal(false)}
-                  onSelect={(files) => {
-                    if (files[0]) {
-                      setForm({ ...form, pdf_url: files[0].file_path });
-                    }
-                  }}
+                  {...({
+                    open: showMediaModal,
+                    multiple: false,
+                    module_ref: "jobs_desc",
+                    onClose: () => setShowMediaModal(false),
+                    onSelect: (files: any) => {
+                      if (files[0]) {
+                        setForm({ ...form, pdf_url: files[0].file_path });
+                      }
+                    },
+                  } as any)}
                 />
               )}
 

@@ -50,9 +50,6 @@ export default function BlogFormPage() {
     const method = "POST";
     const body = form;
 
-    
-
-
     try {
       const res: any = await fetch("/api/blogs", {
         method,
@@ -69,16 +66,14 @@ export default function BlogFormPage() {
       if (res.ok) {
         router.push("/blogs");
       } else {
-        console.error('res  ==== ',res);
+        console.error("res  ==== ", res);
         alert(res.error);
         // alert("Failed to save blog");
       }
-
     } catch (err: any) {
-      console.error('err  ==== ',err);
+      console.error("err  ==== ", err);
       setError(err.message);
     }
-
 
     setLoading(false);
   };
@@ -161,15 +156,17 @@ export default function BlogFormPage() {
               {/* Media Picker Modal */}
               {showMediaModal && (
                 <MediaPickerModal
-                  open={showMediaModal}
-                  multiple={false}
-                  module_ref="blogs"
-                  onClose={() => setShowMediaModal(false)}
-                  onSelect={(files) => {
-                    if (files[0]) {
-                      setForm({ ...form, imageUrl: files[0].file_path });
-                    }
-                  }}
+                  {...({
+                    open: showMediaModal,
+                    multiple: false,
+                    module_ref: "blogs",
+                    onClose: () => setShowMediaModal(false),
+                    onSelect: (files: any) => {
+                      if (files[0]) {
+                        setForm({ ...form, imageUrl: files[0].file_path });
+                      }
+                    },
+                  } as any)}
                 />
               )}
 

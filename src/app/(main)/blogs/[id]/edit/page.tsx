@@ -59,7 +59,7 @@ export default function EditBlogPage() {
       }
     };
     fetchBlog();
-  }, [token,id]);
+  }, [token, id]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -185,18 +185,19 @@ export default function EditBlogPage() {
 
               {showMediaModal && (
                 <MediaPickerModal
-                  open={showMediaModal}
-                  multiple={false}
-                  module_ref="blogs"
-                  onClose={() => setShowMediaModal(false)}
-                  onSelect={(files) => {
-                    if (files[0]) {
-                      setForm({ ...form, imageUrl: files[0].file_path });
-                    }
-                  }}
+                  {...({
+                    open: showMediaModal,
+                    multiple: false,
+                    module_ref: "blogs",
+                    onClose: () => setShowMediaModal(false),
+                    onSelect: (files: any) => {
+                      if (files[0]) {
+                        setForm({ ...form, imageUrl: files[0].file_path });
+                      }
+                    },
+                  } as any)}
                 />
               )}
-
 
               {/* Media Picker Modal */}
               {/* {showMediaModal && (

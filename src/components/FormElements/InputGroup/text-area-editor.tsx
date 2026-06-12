@@ -333,11 +333,13 @@ export default function TipTapEditor({
 
       {openMedia && (
         <MediaPickerModal
-          open={openMedia} // ✅ correct prop name
-          onClose={() => setOpenMedia(false)}
-          multiple={false}
-          module_ref="blogs"
-          onSelect={handleImageInsert} // ✅ gets MediaItem[]
+          {...({
+            open: openMedia,
+            onClose: () => setOpenMedia(false),
+            multiple: false,
+            module_ref: "blogs",
+            onSelect: handleImageInsert,
+          } as any)}
         />
       )}
     </div>

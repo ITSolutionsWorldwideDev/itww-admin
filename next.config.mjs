@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "storage.googleapis.com",
+        hostname: "gkq3annnsj.ufs.sh",
       },
       // {
       //   protocol: "https",

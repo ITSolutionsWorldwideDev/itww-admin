@@ -1,5 +1,8 @@
 import type { Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
+import {withUt} from "uploadthing/tw"
+
+
 
 const config: Config = {
   content: ["./src/**/*.{js,jsx,tsx}"],

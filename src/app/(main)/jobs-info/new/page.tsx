@@ -46,7 +46,6 @@ export default function JobInfoFormPage() {
     if (!token) return;
 
     try {
-
       const res = await fetch("/api/jobs-info", {
         method,
         headers: {
@@ -64,10 +63,8 @@ export default function JobInfoFormPage() {
       } else {
         alert("Failed to save JobInfo");
       }
-
-
     } catch (err: any) {
-      console.error('err  ==== ',err);
+      console.error("err  ==== ", err);
       setError(err.message);
     }
 
@@ -160,15 +157,17 @@ export default function JobInfoFormPage() {
               {/* Media Picker Modal */}
               {showMediaModal && (
                 <MediaPickerModal
-                  open={showMediaModal}
-                  multiple={false}
-                  module_ref="jobs_desc"
-                  onClose={() => setShowMediaModal(false)}
-                  onSelect={(files) => {
-                    if (files[0]) {
-                      setForm({ ...form, pdf_url: files[0].file_path });
-                    }
-                  }}
+                  {...({
+                    open: showMediaModal,
+                    multiple: false,
+                    module_ref: "jobs_desc",
+                    onClose: () => setShowMediaModal(false),
+                    onSelect: (files: any) => {
+                      if (files[0]) {
+                        setForm({ ...form, pdf_url: files[0].file_path });
+                      }
+                    },
+                  } as any)}
                 />
               )}
 

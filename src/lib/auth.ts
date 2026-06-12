@@ -23,3 +23,4 @@ export function verifyJWT(token: string): AuthTokenPayload | null {
     return null;
   }
 }
+  
